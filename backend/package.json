@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Goran Kitic",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "node --import=tsx --env-file=.env --watch src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.3",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.10",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
