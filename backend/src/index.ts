@@ -2,6 +2,7 @@
 import express from "express";
 import morgan from "morgan";
 import chalk from "chalk";
+import cookieParser from "cookie-parser";
 // config
 import { connectDatabase } from "./config/database.ts";
 // constants
@@ -19,7 +20,7 @@ const app = express();
 // MIDDLEWARES
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.use(cookieParser());
 // (Routers)
 app.use("/api/v1/users", userRouter);
 

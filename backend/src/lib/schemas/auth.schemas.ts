@@ -14,12 +14,23 @@ export const signupSchema = z.object({
         .min(8, { message: "Password must be at least 8 characters" })
         .max(128, { message: "Password cannot exceed 128 characters" }),
 });
-
 export type SignupSchema = z.infer<typeof signupSchema>;
 
 export const signinSchema = z.object({
     email: z.email({ message: "Email is invalid" }),
     password: z.string().min(1, { message: "Password is required" })
 });
-
 export type SigninSchema = z.infer<typeof signinSchema>;
+
+export const forgotPasswordSchema = z.object({
+    email: z.email({ message: "Email is invalid" })
+});
+export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z.object({
+    password: z
+        .string()
+        .min(8, "Password must be at least 8 characters")
+        .max(128, "Password cannot exceed 128 characters.")
+});
+export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;

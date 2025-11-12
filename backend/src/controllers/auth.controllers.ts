@@ -1,12 +1,13 @@
 // utils
 import { AppError } from "src/lib/utils/AppError.ts";
 import { catchAsync } from "src/lib/utils/catchAsync.ts";
+import { generateToken, hash } from "src/lib/utils/crypto.ts";
 import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "src/lib/utils/cookies.ts";
 // email
 import { sendEmail } from "src/lib/email/sendEmail.ts";
 import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates.ts";
 // services
-import { createSession, deleteUser, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, verifyEmailToken } from "src/services/auth.services.ts";
+import { createSession, deleteUser, requestResetPassword, resetUserPassword, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, verifyEmailToken } from "src/services/auth.services.ts";
 // constants
 import { APP_ORIGIN } from "src/constants/env.ts";
 
@@ -19,7 +20,7 @@ export const signUp = catchAsync(async (req, res, next) => {
     // 2) Handle business logic, call service to create user document
     const { user, verificationToken } = await signupUser({ name, email, password });
 
-    // 3.1) Send a verification code to the user’s email
+    // 3.1) Send a verification token to the user’s email
     const verificationUrl = `${APP_ORIGIN}/verification?token=${verificationToken}`;
     const html = VERIFICATION_EMAIL_TEMPLATE.replace("{verificationUrl}", verificationUrl);
     const { error } = await sendEmail({ to: user.email, subject: "Confirm email", html });
@@ -129,7 +130,6 @@ export const signOutAll = catchAsync(async (req, res, next) => {
     res.status(200).json({ status: "success" });
 });
 
-
 // Email token verification
 // GET method
 // Public route /api/v1/users/verification
@@ -147,5 +147,42 @@ export const verifyEmail = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: "success",
         message: "Email verified successfully."
+    });
+});
+
+// User forgot password
+// POST method
+// Public route /api/v1/users/forgot-password
+export const forgotPassword = catchAsync(async (req, res, next) => {
+    const { email } = req.body;
+    // 1) Request validation is done in the validateSchema middleware
+    // 2) Handle business logic, call service to request and send reset password link
+    await requestResetPassword(email);
+
+    // 3) Send response to the client
+    res.status(200).json({
+        status: "success",
+        message: "Reset password link has been sent to your email."
+    });
+});
+
+// Reset password
+// PATCH method
+// Public route /api/v1/users/reset-password
+export const resetPassword = catchAsync(async (req, res, next) => {
+    const { password } = req.body;
+    // 1) Request validation is done in the validateSchema middleware
+    // 2) Check if reset password token exits and is valid
+    const { token } = req.query;
+    if (!token || typeof token !== "string") {
+        return next(new AppError("Reset password token is missing or invalid.", 400));
+    }
+    // 3) Handle business logic, call service to actually reset user's password
+    await resetUserPassword(token, password);
+
+    // 4) Send response to the client
+    res.status(200).json({
+        status: "success",
+        message: "Password has been reset successfully. Please sign in again."
     });
 });

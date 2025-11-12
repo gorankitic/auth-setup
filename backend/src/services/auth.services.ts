@@ -6,11 +6,14 @@ import { SigninSchema, SignupSchema } from "src/lib/schemas/auth.schemas.ts";
 import { signJWT } from "src/lib/utils/jwt.ts";
 import { AppError } from "src/lib/utils/AppError.ts";
 import { generateToken, hash } from "src/lib/utils/crypto.ts";
+// email
+import { sendEmail } from "src/lib/email/sendEmail.ts";
+import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates.ts";
 // models
 import User from "src/models/user.model.ts";
 import Session from "src/models/session.model.ts";
 // constants
-import { REFRESH_TOKEN_TTL_MS } from "src/constants/env.ts";
+import { APP_ORIGIN, REFRESH_TOKEN_TTL_MS } from "src/constants/env.ts";
 
 type TCreateSession = {
     userId: Types.ObjectId,
@@ -31,7 +34,7 @@ export const createSession = async ({ userId, role, userAgent, ip }: TCreateSess
     const refreshTokenHash = hash(refreshToken);
 
     // 2) Store session into database (per device)
-    await Session.create({
+    const session = await Session.create({
         userId,
         refreshTokenHash,
         userAgent,
@@ -42,7 +45,7 @@ export const createSession = async ({ userId, role, userAgent, ip }: TCreateSess
     });
 
     // 3) Create access token 
-    const accessToken = signJWT({ sub: String(userId), role });
+    const accessToken = signJWT({ sub: String(userId), role, sessionId: String(session._id) });
 
     // 4) Return data to auth controller layer
     return { accessToken, refreshToken }
@@ -77,14 +80,14 @@ export const rotateSession = async ({ refreshToken, userAgent, ip }: TRotateSess
     await currentSession.save();
 
     // 4) Issue new access token
-    const accessToken = signJWT({ sub: String(currentSession.userId) });
+    const accessToken = signJWT({ sub: String(currentSession.userId), sessionId: String(newSession._id) });
 
     // 5) Return data
     return { accessToken, refreshToken: newRefreshToken, session: newSession }
 }
 
 export const revokeSession = async (incomingRefreshToken: string) => {
-    // 1 Find current session using hashed refreshToken
+    // 1) Find current session using hashed refreshToken
     const refreshTokenHash = hash(incomingRefreshToken);
     const session = await Session.findOne({ refreshTokenHash });
 
@@ -92,7 +95,7 @@ export const revokeSession = async (incomingRefreshToken: string) => {
     // Because throwing AppError would:
     // Leak information about session validity
     // Allow attackers to detect valid vs invalid tokens
-    // Break logout gracefully when the session is already gone
+    // Break signout gracefully when the session is already gone
 
     // 2) If session exists and isn't already revoked → revoke it
     if (session && !session.revokedAt) {
@@ -117,7 +120,8 @@ export const signupUser = async ({ name, email, password }: SignupSchema) => {
 
     // 3) Create a new user
     // User password is hashed in pre-save mongoose hook in User model
-    const user = await User.create({ name, email, password, verificationToken });
+    const verificationTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
+    const user = await User.create({ name, email, password, verificationToken, verificationTokenExpiresAt });
 
     // 4) Return data to controller
     return { user, verificationToken };
@@ -155,6 +159,54 @@ export const verifyEmailToken = async (verificationToken: string) => {
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
     await user.save();
+
+    return user;
+}
+
+export const requestResetPassword = async (email: string) => {
+    const user = await User.findOne({ email });
+    if (!user) throw new AppError("No user found with that email.", 404);
+
+    const resetPasswordToken = generateToken(32);
+    const resetPasswordTokenHash = hash(resetPasswordToken);
+    user.resetPasswordToken = resetPasswordTokenHash;
+    user.resetPasswordTokenExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    const resetPasswordUrl = `${APP_ORIGIN}/reset-password?token=${resetPasswordToken}`;
+    const html = RESET_PASSWORD_TEMPLATE.replace("{resetPasswordUrl}", resetPasswordUrl);
+    const { error } = await sendEmail({ to: user.email, subject: "Reset password", html });
+
+    if (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordTokenExpiresAt = undefined;
+        await user.save();
+        throw new AppError("Failed to send reset password email. Please try again later.", 500);
+    }
+}
+
+export const resetUserPassword = async (resetPasswordToken: string, newPassword: string) => {
+    // 1) Hash the incoming reset password token
+    const resetPasswordTokenHash = hash(resetPasswordToken);
+    // 2) Find user with this token & check if token is expired
+    const user = await User.findOne({
+        resetPasswordToken: resetPasswordTokenHash,
+        resetPasswordTokenExpiresAt: { $gt: new Date() }
+    });
+    if (!user) {
+        throw new AppError("Invalid or expired reset password token.", 400);
+    }
+
+    // 3) Update password and clear reset fields
+    // User password is hashed in pre-save mongoose hook in User model
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpiresAt = undefined;
+    await user.save();
+    // 4) Update changedPasswordAt property (using mongoose pre-save middleware in User model)
+
+    // 5) Invalidate all sessions
+    await revokeAllUserSesions(user._id);
 
     return user;
 }

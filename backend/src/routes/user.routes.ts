@@ -1,9 +1,9 @@
 // modules
 import express from "express";
 // controllers
-import { refresh, signIn, signOut, signOutAll, signUp, verifyEmail } from "src/controllers/auth.controllers.ts";
+import { forgotPassword, refresh, resetPassword, signIn, signOut, signOutAll, signUp, verifyEmail } from "src/controllers/auth.controllers.ts";
 // schemas
-import { signinSchema, signupSchema } from "src/lib/schemas/auth.schemas.ts";
+import { forgotPasswordSchema, resetPasswordSchema, signinSchema, signupSchema } from "src/lib/schemas/auth.schemas.ts";
 // middlewares
 import { validate } from "src/middleware/validateSchema.ts";
 import { protect } from "src/middleware/authMiddleware.ts";
@@ -16,6 +16,8 @@ router
     .post("/refresh", refresh)
     .post("/signout", protect, signOut)
     .post("/signoutall", protect, signOutAll)
+    .post("/forgot-password", validate(forgotPasswordSchema), forgotPassword)
+    .patch("/reset-password", validate(resetPasswordSchema), resetPassword)
     .get("/verification", verifyEmail)
 
 export default router;

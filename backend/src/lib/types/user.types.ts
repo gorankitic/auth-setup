@@ -11,8 +11,8 @@ export interface IUser extends Document {
     verificationToken?: string;
     verificationTokenExpiresAt?: Date;
     passwordChangedAt?: Date;
-    passwordResetToken?: string;
-    passwordResetTokenExpiresAt?: Date;
+    resetPasswordToken?: string;
+    resetPasswordTokenExpiresAt?: Date;
     correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
     passwordChangedAfterJWTIssued(jwtIssuedAt: number): boolean
 }

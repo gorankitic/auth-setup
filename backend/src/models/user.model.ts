@@ -39,12 +39,14 @@ const userSchema = new Schema<IUser>({
     },
     verificationTokenExpiresAt: {
         type: Date,
-        default: () => new Date(Date.now() + 60 * 60 * 1000),
         index: { expires: 0 }
     },
     passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetTokenExpiresAt: Date,
+    resetPasswordToken: {
+        type: String,
+        select: false
+    },
+    resetPasswordTokenExpiresAt: Date,
 }, { timestamps: true });
 
 // Pre-save mongoose document hook/middleware to hash password
@@ -55,10 +57,20 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-// Pre-save mongoose document hook/middleware to hash verification code
+// Pre-save mongoose document hook/middleware to hash verification token
 userSchema.pre("save", async function (next) {
     if (!this.isModified("verificationToken") || !this.verificationToken) return next();
     this.verificationToken = crypto.createHash('sha256').update(this.verificationToken).digest('hex');
+    next();
+});
+
+// Pre-save mongoose document hook/middleware to update passwordChangedAt property when reset password happens
+// Used to invalidate existing JWT issued before user reset or update password
+userSchema.pre("save", function (next) {
+    // Only run if password was modified and document isn't new
+    if (!this.isModified("password") || this.isNew) return next();
+    // Subtract 1 second to avoid timing race conditions between token issuance and saving
+    this.passwordChangedAt = new Date(Date.now() - 1000);
     next();
 });
 
