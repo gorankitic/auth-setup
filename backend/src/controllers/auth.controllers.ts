@@ -6,13 +6,13 @@ import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "s
 import { sendEmail } from "src/lib/email/sendEmail.ts";
 import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates.ts";
 // services
-import { createSession, deleteUser, requestResetPassword, resetUserPassword, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, verifyEmailToken } from "src/services/auth.services.ts";
+import { createSession, deleteUser, requestResetPassword, resetUserPassword, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, updateUserPassword, verifyEmailToken } from "src/services/auth.services.ts";
 // constants
 import { APP_ORIGIN } from "src/constants/env.ts";
 
 // Sign up user
 // POST method
-// Public route /api/v1/users/signup
+// Public route /api/v1/auth/signup
 export const signUp = catchAsync(async (req, res, next) => {
     const { name, email, password } = req.body;
     // 1) Request validation is done in the validateSchema middleware
@@ -39,7 +39,7 @@ export const signUp = catchAsync(async (req, res, next) => {
 
 // Sign in user
 // POST method
-// Public route /api/v1/users/signin
+// Public route /api/v1/auth/signin
 export const signIn = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
     // 1) Request validation is done in the validateSchema middleware
@@ -70,7 +70,7 @@ export const signIn = catchAsync(async (req, res, next) => {
 
 // Rotate refresh token & issue new tokens
 // POST method
-// Public route /api/v1/users/refresh
+// Public route /api/v1/auth/refresh
 export const refresh = catchAsync(async (req, res, next) => {
     // 1) Check for incoming refresh token
     const incomingRefreshToken = req.cookies.refreshToken as string;
@@ -93,7 +93,7 @@ export const refresh = catchAsync(async (req, res, next) => {
 
 // Sign out user from single session
 // POST method
-// Protected route /api/v1/users/signout
+// Protected route /api/v1/auth/signout
 export const signOut = catchAsync(async (req, res, next) => {
     // 1) Check for incoming refresh token
     const incomingRefreshToken = req.cookies.refreshToken as string;
@@ -113,7 +113,7 @@ export const signOut = catchAsync(async (req, res, next) => {
 
 // Sign out user from all session
 // POST method
-// Protected route /api/v1/users/signoutall
+// Protected route /api/v1/auth/signoutall
 export const signOutAll = catchAsync(async (req, res, next) => {
     // 1) Check for authenticated user id
     const userId = (req as any).user._id;
@@ -131,7 +131,7 @@ export const signOutAll = catchAsync(async (req, res, next) => {
 
 // Email token verification
 // GET method
-// Public route /api/v1/users/verification
+// Public route /api/v1/auth/verification
 export const verifyEmail = catchAsync(async (req, res, next) => {
     // 1) Check for verification token
     const { token } = req.query;
@@ -151,7 +151,7 @@ export const verifyEmail = catchAsync(async (req, res, next) => {
 
 // User forgot password
 // POST method
-// Public route /api/v1/users/forgot-password
+// Public route /api/v1/auth/forgot-password
 export const forgotPassword = catchAsync(async (req, res, next) => {
     const { email } = req.body;
     // 1) Request validation is done in the validateSchema middleware
@@ -167,7 +167,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
 // Reset password
 // PATCH method
-// Public route /api/v1/users/reset-password
+// Public route /api/v1/auth/reset-password
 export const resetPassword = catchAsync(async (req, res, next) => {
     const { password } = req.body;
     // 1) Request validation is done in the validateSchema middleware
@@ -183,5 +183,27 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: "success",
         message: "Password has been reset successfully. Please sign in again."
+    });
+});
+
+// Update password
+// PATCH method
+// Protected route /api/v1/auth/update-password
+export const updatePassword = catchAsync(async (req, res, next) => {
+    // 1) Request validation is done in the validateSchema middleware
+    const { currentPassword, newPassword } = req.body;
+    const userId = (req as any).user._id;
+
+    // 2) Call service to update user password
+    await updateUserPassword(userId, currentPassword, newPassword);
+
+    // 3) Reavoke all sessions & clear all cookies
+    await revokeAllUserSesions(userId);
+    clearAuthCookies(res);
+
+    // 4) Send response to the client
+    res.status(200).json({
+        status: "success",
+        message: "Password updated successfully. Please sign in again."
     });
 });

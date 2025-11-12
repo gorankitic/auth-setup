@@ -10,7 +10,7 @@ import { NODE_ENV, PORT } from "./constants/env.ts";
 // middlewares
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
 // (routers)
-import userRouter from "./routes/user.routes.ts";
+import authRouter from "./routes/auth.routes.ts";
 // lib
 import { AppError } from "./lib/utils/AppError.ts";
 
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 // (Routers)
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/auth", authRouter);
 
 // Catch-all for undefined routes
 app.use((req, res, next) => {

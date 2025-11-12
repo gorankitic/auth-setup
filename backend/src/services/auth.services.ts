@@ -211,6 +211,29 @@ export const resetUserPassword = async (resetPasswordToken: string, newPassword:
     return user;
 }
 
+export const updateUserPassword = async (userId: string, currentPassword: string, newPassword: string) => {
+    // 1) Get user from collection
+    const user = await User.findById(userId).select("+password");
+    // We already checked for user in protect middleware, but typescript doesn't know that 
+    if (!user) {
+        throw new AppError("There is no user with that id.", 404);
+    }
+
+    // 2) Check if POSTed current password is correct
+    if (!(await user.correctPassword(currentPassword, user.password))) {
+        throw new AppError("Incorrect current password.", 401);
+    }
+
+    // 3) Update password
+    // User password is hashed in pre-save mongoose hook in User model
+    user.password = newPassword;
+    await user.save();
+
+    // 4) Update changedPasswordAt property (using mongoose pre-save middleware in User model)
+
+    return user;
+}
+
 export const deleteUser = async (userId: string) => {
     const user = await User.findByIdAndDelete(userId);
 

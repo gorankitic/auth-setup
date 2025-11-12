@@ -34,3 +34,12 @@ export const resetPasswordSchema = z.object({
         .max(128, "Password cannot exceed 128 characters.")
 });
 export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;
+
+export const updatePasswordSchema = z.object({
+    currentPassword: z.string().min(8, "Current password is required."),
+    newPassword: z
+        .string()
+        .min(8, "Password must be at least 8 characters.")
+        .max(128, "Password cannot exceed 128 characters."),
+});
+export type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;
