@@ -2,8 +2,13 @@
 import { AppError } from "src/lib/utils/AppError.ts";
 import { catchAsync } from "src/lib/utils/catchAsync.ts";
 import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "src/lib/utils/cookies.ts";
+// email
+import { sendEmail } from "src/lib/email/sendEmail.ts";
+import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates.ts";
 // services
-import { createSession, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser } from "src/services/auth.services.ts";
+import { createSession, deleteUser, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, verifyEmailToken } from "src/services/auth.services.ts";
+// constants
+import { APP_ORIGIN } from "src/constants/env.ts";
 
 // Sign up user
 // POST method
@@ -12,12 +17,23 @@ export const signUp = catchAsync(async (req, res, next) => {
     const { name, email, password } = req.body;
     // 1) Request validation is done in the validateSchema middleware
     // 2) Handle business logic, call service to create user document
-    const user = await signupUser({ name, email, password });
+    const { user, verificationToken } = await signupUser({ name, email, password });
 
-    // 3) Send response to the client
+    // 3.1) Send a verification code to the user’s email
+    const verificationUrl = `${APP_ORIGIN}/verification?token=${verificationToken}`;
+    const html = VERIFICATION_EMAIL_TEMPLATE.replace("{verificationUrl}", verificationUrl);
+    const { error } = await sendEmail({ to: user.email, subject: "Confirm email", html });
+
+    // 3.2) Delete the user from the database if sending email fails
+    if (error) {
+        await deleteUser(user._id.toString());
+        return next(new AppError("Failed to send verification email. Please try again.", 500));
+    }
+
+    // 4) Send response to the client
     res.status(201).json({
         status: "success",
-        message: "Account created. Check your email to verify your account."
+        message: "Account created. Check your email to confirm it."
     });
 });
 
@@ -71,7 +87,7 @@ export const refresh = catchAsync(async (req, res, next) => {
     setAccessTokenCookie(accessToken, res);
     setRefreshTokenCookie(refreshToken, res);
 
-    // 4) Send response to client
+    // 4) Send response to the client
     res.status(200).json({ status: "success" });
 });
 
@@ -91,7 +107,7 @@ export const signOut = catchAsync(async (req, res, next) => {
     // 3) Clear all authentication cookies
     clearAuthCookies(res);
 
-    // 4) Send response to client
+    // 4) Send response to the client
     res.status(200).json({ status: "success" });
 });
 
@@ -109,6 +125,27 @@ export const signOutAll = catchAsync(async (req, res, next) => {
     // 3) Clear all authentication cookies
     clearAuthCookies(res);
 
-    // 4) Send response to client
+    // 4) Send response to the client
     res.status(200).json({ status: "success" });
+});
+
+
+// Email token verification
+// GET method
+// Public route /api/v1/users/verification
+export const verifyEmail = catchAsync(async (req, res, next) => {
+    // 1) Check for verification token
+    const { token } = req.query;
+    if (!token || typeof token !== "string") {
+        return next(new AppError("Verification token is missing or invalid.", 400));
+    }
+
+    // 2) Handle business logic, call service to verify user's email
+    await verifyEmailToken(token);
+
+    // 3) Send response to the client
+    res.status(200).json({
+        status: "success",
+        message: "Email verified successfully."
+    });
 });

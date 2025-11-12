@@ -1,7 +1,7 @@
 // modules
 import express from "express";
 // controllers
-import { refresh, signIn, signOut, signOutAll, signUp } from "src/controllers/auth.controllers.ts";
+import { refresh, signIn, signOut, signOutAll, signUp, verifyEmail } from "src/controllers/auth.controllers.ts";
 // schemas
 import { signinSchema, signupSchema } from "src/lib/schemas/auth.schemas.ts";
 // middlewares
@@ -16,5 +16,6 @@ router
     .post("/refresh", refresh)
     .post("/signout", protect, signOut)
     .post("/signoutall", protect, signOutAll)
+    .get("/verification", verifyEmail)
 
 export default router;

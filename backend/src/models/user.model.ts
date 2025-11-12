@@ -34,13 +34,17 @@ const userSchema = new Schema<IUser>({
     },
     verificationToken: {
         type: String,
-        index: true
+        index: true,
+        select: false
     },
-    verificationTokenExpiresAt: Date,
+    verificationTokenExpiresAt: {
+        type: Date,
+        default: () => new Date(Date.now() + 60 * 60 * 1000),
+        index: { expires: 0 }
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetTokenExpiresAt: Date,
-
 }, { timestamps: true });
 
 // Pre-save mongoose document hook/middleware to hash password
@@ -51,7 +55,7 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-// Pre-save mongoose document hook/middleware to hash verification token
+// Pre-save mongoose document hook/middleware to hash verification code
 userSchema.pre("save", async function (next) {
     if (!this.isModified("verificationToken") || !this.verificationToken) return next();
     this.verificationToken = crypto.createHash('sha256').update(this.verificationToken).digest('hex');

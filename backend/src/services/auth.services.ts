@@ -107,15 +107,20 @@ export const revokeAllUserSesions = async (userId: Types.ObjectId) => {
 }
 
 export const signupUser = async ({ name, email, password }: SignupSchema) => {
-    // 1) Initial check if user already exist in database
+    // 1) Initial check if user already exists in database
     const existingUser = await User.findOne({ email });
     if (existingUser) throw new AppError("User already exists.", 409);
 
-    // 2) Create a new user
-    // User password is hashed in pre-save mongoose hook in User model
-    const user = await User.create({ name, email, password });
+    // 2) Generate verification code
+    // Verification code is hashed in pre-save mongoose hook in User model
+    const verificationToken = generateToken(32);
 
-    return user;
+    // 3) Create a new user
+    // User password is hashed in pre-save mongoose hook in User model
+    const user = await User.create({ name, email, password, verificationToken });
+
+    // 4) Return data to controller
+    return { user, verificationToken };
 }
 
 export const signinUser = async ({ email, password }: SigninSchema) => {
@@ -131,3 +136,33 @@ export const signinUser = async ({ email, password }: SigninSchema) => {
 
     return user;
 }
+
+export const verifyEmailToken = async (verificationToken: string) => {
+    // 1) Hash verification token
+    const verificationTokenHash = hash(verificationToken);
+
+    // 2) Check if verification token has expired
+    const user = await User.findOne({
+        verificationToken: verificationTokenHash,
+        verificationTokenExpiresAt: { $gt: new Date() },
+    });
+    if (!user) {
+        throw new AppError("Invalid or expired verification token.", 400);
+    }
+
+    // 3) Mark user as verified
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+
+    return user;
+}
+
+export const deleteUser = async (userId: string) => {
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+        throw new AppError("There is no user with that id.", 404);
+    }
+} 
