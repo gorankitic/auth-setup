@@ -8,8 +8,10 @@ import { connectDatabase } from "./config/database.ts";
 import { NODE_ENV, PORT } from "./constants/env.ts";
 // middlewares
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
+// (routers)
+import userRouter from "./routes/user.routes.ts";
 // lib
-import { AppError } from "./lib/AppError.ts";
+import { AppError } from "./lib/utils/AppError.ts";
 
 // Initialize express application
 const app = express();
@@ -19,6 +21,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // (Routers)
+app.use("/api/v1/users", userRouter);
 
 // Catch-all for undefined routes
 app.use((req, res, next) => {
