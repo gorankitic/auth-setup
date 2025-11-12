@@ -1,7 +1,6 @@
 // utils
 import { AppError } from "src/lib/utils/AppError.ts";
 import { catchAsync } from "src/lib/utils/catchAsync.ts";
-import { generateToken, hash } from "src/lib/utils/crypto.ts";
 import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "src/lib/utils/cookies.ts";
 // email
 import { sendEmail } from "src/lib/email/sendEmail.ts";
