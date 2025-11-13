@@ -23,10 +23,6 @@ export const JWT_ACCESS_EXPIRES_IN = getEnv("JWT_ACCESS_EXPIRES_IN");
 export const TOKEN_BYTES = Number(getEnv("TOKEN_BYTES", "64"));
 export const REFRESH_TOKEN_TTL_MS = Number(getEnv("REFRESH_TOKEN_TTL_MS"));
 
-// Email: for production
 export const RESEND_API_KEY = getEnv("RESEND_API_KEY");
-// Email: for development
-export const EMAIL_USERNAME = getEnv("EMAIL_USERNAME");
-export const EMAIL_PASSWORD = getEnv("EMAIL_PASSWORD");
-export const EMAIL_HOST = getEnv("EMAIL_HOST");
-export const EMAIL_PORT = getEnv("EMAIL_PORT");
+
+export const UPLOADTHING_TOKEN = getEnv("UPLOADTHING_TOKEN");
