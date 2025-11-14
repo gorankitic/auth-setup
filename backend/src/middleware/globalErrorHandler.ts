@@ -93,7 +93,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     if (error.name === "JsonWebTokenError") error = handleJWTError();
     if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
 
-    // 3) Send response based on environmen
+    // 3) Send response based on environment
     const appError = error as AppError;
     appError.statusCode = appError.statusCode || 500;
     appError.status = appError.status || "error";

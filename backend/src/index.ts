@@ -2,12 +2,13 @@
 import express from "express";
 import morgan from "morgan";
 import chalk from "chalk";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { createRouteHandler } from "uploadthing/express";
 // config
 import { connectDatabase } from "./config/database.ts";
 // constants
-import { NODE_ENV, PORT } from "./constants/env.ts";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
 // middlewares
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
 // (routers)
@@ -23,8 +24,9 @@ const app = express();
 // MIDDLEWARES
 app.use(morgan("dev"));
 app.use(cookieParser());
-app.use("/api/v1/uploadthing", createRouteHandler({ router: uploadRouter }))
 app.use(express.json());
+app.use(cors({ origin: APP_ORIGIN, credentials: true }));
+app.use("/api/v1/uploadthing", createRouteHandler({ router: uploadRouter }));
 // (Routers)
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);

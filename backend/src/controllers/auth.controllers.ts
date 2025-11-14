@@ -64,6 +64,7 @@ export const signIn = catchAsync(async (req, res, next) => {
             email: user.email,
             role: user.role,
             isVerified: user.isVerified,
+            photoUrl: user.photoUrl
         }
     });
 });
