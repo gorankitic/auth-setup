@@ -6,9 +6,9 @@ import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "s
 import { sendEmail } from "src/lib/email/sendEmail.ts";
 import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates.ts";
 // services
-import { createSession, deleteUser, requestResetPassword, resetUserPassword, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, updateUserPassword, verifyEmailToken } from "src/services/auth.services.ts";
+import { createSession, deleteUser, requestResetPassword, resetUserPassword, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services.ts";
 // constants
-import { APP_ORIGIN } from "src/constants/env.ts";
+import { CLIENT_ORIGIN, SERVER_ORIGIN } from "src/constants/env.ts";
 
 // Sign up user
 // POST method
@@ -20,7 +20,7 @@ export const signUp = catchAsync(async (req, res, next) => {
     const { user, verificationToken } = await signupUser({ name, email, password });
 
     // 3.1) Send a verification token to the user’s email
-    const verificationUrl = `${APP_ORIGIN}/verification?token=${verificationToken}`;
+    const verificationUrl = `${SERVER_ORIGIN}/verification?token=${verificationToken}`;
     const html = VERIFICATION_EMAIL_TEMPLATE.replace("{verificationUrl}", verificationUrl);
     const { error } = await sendEmail({ to: user.email, subject: "Confirm email", html });
 
@@ -132,22 +132,22 @@ export const signOutAll = catchAsync(async (req, res, next) => {
 
 // Email token verification
 // GET method
-// Public route /api/v1/auth/verification
-export const verifyEmail = catchAsync(async (req, res, next) => {
+// Public route /api/v1/auth/verification?token=verificationToken
+export const verification = catchAsync(async (req, res, next) => {
     // 1) Check for verification token
     const { token } = req.query;
     if (!token || typeof token !== "string") {
-        return next(new AppError("Verification token is missing or invalid.", 400));
+        return res.redirect(`${CLIENT_ORIGIN}/verification-failed`);
     }
 
     // 2) Handle business logic, call service to verify user's email
-    await verifyEmailToken(token);
+    const isVerified = await tokenVerification(token);
+    if (!isVerified) {
+        return res.redirect(`${CLIENT_ORIGIN}/verification-failed`);
+    }
 
-    // 3) Send response to the client
-    res.status(200).json({
-        status: "success",
-        message: "Email verified successfully."
-    });
+    // 3) Redirect user to /verification-success
+    res.redirect(`${CLIENT_ORIGIN}/verification-success`);
 });
 
 // User forgot password

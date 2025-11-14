@@ -12,7 +12,8 @@ const getEnv = (key: string, defaultValue?: string): string => {
 
 export const NODE_ENV = getEnv("NODE_ENV");
 export const PORT = getEnv("PORT", "3000");
-export const APP_ORIGIN = getEnv("APP_ORIGIN");
+export const CLIENT_ORIGIN = getEnv("CLIENT_ORIGIN");
+export const SERVER_ORIGIN = getEnv("SERVER_ORIGIN");
 export const MONGO_URI = getEnv("MONGO_URI");
 
 // JWT (for access tokens)

@@ -13,7 +13,7 @@ import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates.ts";
 import User from "src/models/user.model.ts";
 import Session from "src/models/session.model.ts";
 // constants
-import { APP_ORIGIN, REFRESH_TOKEN_TTL_MS } from "src/constants/env.ts";
+import { SERVER_ORIGIN, REFRESH_TOKEN_TTL_MS } from "src/constants/env.ts";
 
 type TCreateSession = {
     userId: Types.ObjectId,
@@ -141,7 +141,7 @@ export const signinUser = async ({ email, password }: SigninSchema) => {
     return user;
 }
 
-export const verifyEmailToken = async (verificationToken: string) => {
+export const tokenVerification = async (verificationToken: string) => {
     // 1) Hash verification token
     const verificationTokenHash = hash(verificationToken);
 
@@ -150,9 +150,8 @@ export const verifyEmailToken = async (verificationToken: string) => {
         verificationToken: verificationTokenHash,
         verificationTokenExpiresAt: { $gt: new Date() },
     });
-    if (!user) {
-        throw new AppError("Invalid or expired verification token.", 400);
-    }
+    // If verification fails return false to redirect user to /verification-failed
+    if (!user) return false;
 
     // 3) Mark user as verified
     user.isVerified = true;
@@ -160,7 +159,8 @@ export const verifyEmailToken = async (verificationToken: string) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
 
-    return user;
+    // If verification successfull return true to redirect user to /verification-success
+    return true;
 }
 
 export const requestResetPassword = async (email: string) => {
@@ -173,7 +173,7 @@ export const requestResetPassword = async (email: string) => {
     user.resetPasswordTokenExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    const resetPasswordUrl = `${APP_ORIGIN}/reset-password?token=${resetPasswordToken}`;
+    const resetPasswordUrl = `${SERVER_ORIGIN}/reset-password?token=${resetPasswordToken}`;
     const html = RESET_PASSWORD_TEMPLATE.replace("{resetPasswordUrl}", resetPasswordUrl);
     const { error } = await sendEmail({ to: user.email, subject: "Reset password", html });
 

@@ -8,7 +8,7 @@ import { createRouteHandler } from "uploadthing/express";
 // config
 import { connectDatabase } from "./config/database.ts";
 // constants
-import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
+import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
 // middlewares
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
 // (routers)
@@ -25,7 +25,7 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ origin: APP_ORIGIN, credentials: true }));
+app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 app.use("/api/v1/uploadthing", createRouteHandler({ router: uploadRouter }));
 // (Routers)
 app.use("/api/v1/auth", authRouter);
