@@ -7,6 +7,8 @@ import SignUp from "@/pages/SignUp";
 import Settings from "@/pages/Settings";
 import VerificationSuccess from "@/pages/VerificationSuccess";
 import VerificationFailed from "@/pages/VerificationFailed";
+import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
 // route-wrappers
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoutes from "./PublicRoutes";
@@ -37,6 +39,8 @@ const router = createBrowserRouter([
                     { path: "/signup", element: <SignUp /> },
                     { path: "/verification-success", element: <VerificationSuccess /> },
                     { path: "/verification-failed", element: <VerificationFailed /> },
+                    { path: "/forgot-password", element: <ForgotPassword /> },
+                    { path: "/reset-password", element: <ResetPassword /> },
                 ]
             }
         ]

@@ -1,7 +1,7 @@
 // lib
 import api from "@/lib/apiClient";
 // types
-import type { SignInSchema, SignUpSchema } from "@/lib/schemas/auth.schema";
+import type { ForgotPasswordSchema, SignInSchema, SignUpSchema } from "@/lib/schemas/auth.schema";
 
 export const signUpApi = async ({ name, email, password }: SignUpSchema) => {
     const { data } = await api.post("/auth/signup", { name, email, password });
@@ -16,6 +16,12 @@ export const signOutApi = async () => {
     await api.post("/auth/signout");
 }
 
-export const verificationApi = async (verificationToken: string) => {
-    await api.post(`/auth/verification?token=${verificationToken}`);
+export const forgotPasswordApi = async ({ email }: ForgotPasswordSchema) => {
+    const { data } = await api.post("/auth/forgot-password", { email });
+    return data;
+}
+
+export const resetPasswordApi = async ({ password, token }: { password: string; token: string }) => {
+    const { data } = await api.patch(`/auth/reset-password?token=${token}`, { password });
+    return data;
 }
