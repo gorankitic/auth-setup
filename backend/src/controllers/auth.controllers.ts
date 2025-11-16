@@ -20,7 +20,7 @@ export const signUp = catchAsync(async (req, res, next) => {
     const { user, verificationToken } = await signupUser({ name, email, password });
 
     // 3.1) Send a verification token to the user’s email
-    const verificationUrl = `${SERVER_ORIGIN}/verification?token=${verificationToken}`;
+    const verificationUrl = `${SERVER_ORIGIN}/api/v1/auth/verification?token=${verificationToken}`;
     const html = VERIFICATION_EMAIL_TEMPLATE.replace("{verificationUrl}", verificationUrl);
     const { error } = await sendEmail({ to: user.email, subject: "Confirm email", html });
 
@@ -56,17 +56,7 @@ export const signIn = catchAsync(async (req, res, next) => {
     setRefreshTokenCookie(refreshToken, res);
 
     // 5) Send response to client
-    res.status(200).json({
-        status: "success",
-        user: {
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            isVerified: user.isVerified,
-            photoUrl: user.photoUrl
-        }
-    });
+    res.status(200).json({ status: "success" });
 });
 
 // Rotate refresh token & issue new tokens

@@ -18,7 +18,7 @@ export const MONGO_URI = getEnv("MONGO_URI");
 
 // JWT (for access tokens)
 export const JWT_ACCESS_SECRET = getEnv("JWT_ACCESS_SECRET");
-export const JWT_ACCESS_EXPIRES_IN = getEnv("JWT_ACCESS_EXPIRES_IN");
+export const JWT_ACCESS_TOKEN_TTL_MS = Number(getEnv("JWT_ACCESS_TOKEN_TTL_MS"));
 
 // Refresh tokens
 export const TOKEN_BYTES = Number(getEnv("TOKEN_BYTES", "64"));

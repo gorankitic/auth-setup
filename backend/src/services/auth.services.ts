@@ -131,11 +131,11 @@ export const signinUser = async ({ email, password }: SigninSchema) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user || !(await user.correctPassword(password, user.password))) {
-        throw new AppError("Incorrect email or password.", 401);
+        throw new AppError("Incorrect email or password.", 400);
     }
 
     if (!user.isVerified) {
-        throw new AppError("Please verify your email before signing in.", 401);
+        throw new AppError("Please verify your email before signing in.", 400);
     }
 
     return user;
@@ -221,7 +221,7 @@ export const updateUserPassword = async (userId: string, currentPassword: string
 
     // 2) Check if POSTed current password is correct
     if (!(await user.correctPassword(currentPassword, user.password))) {
-        throw new AppError("Incorrect current password.", 401);
+        throw new AppError("Incorrect current password.", 400);
     }
 
     // 3) Update password

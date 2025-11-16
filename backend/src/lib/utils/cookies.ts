@@ -1,15 +1,15 @@
 // modules
 import { Response, CookieOptions } from "express";
 // constants
-import { NODE_ENV } from "src/constants/env.ts";
+import { JWT_ACCESS_TOKEN_TTL_MS, NODE_ENV } from "src/constants/env.ts";
 
 const cookieOptions: CookieOptions = {
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     secure: NODE_ENV === "production"
 }
 
-export const setAccessTokenCookie = (token: string, res: Response) => res.cookie("accessToken", token, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
+export const setAccessTokenCookie = (token: string, res: Response) => res.cookie("accessToken", token, { ...cookieOptions, maxAge: JWT_ACCESS_TOKEN_TTL_MS });
 
 export const setRefreshTokenCookie = (token: string, res: Response) => res.cookie("refreshToken", token, { ...cookieOptions, maxAge: undefined });
 
