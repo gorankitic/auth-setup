@@ -13,7 +13,7 @@ import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates.ts";
 import User from "src/models/user.model.ts";
 import Session from "src/models/session.model.ts";
 // constants
-import { SERVER_ORIGIN, REFRESH_TOKEN_TTL_MS } from "src/constants/env.ts";
+import { SERVER_ORIGIN, REFRESH_TOKEN_TTL_MS, CLIENT_ORIGIN } from "src/constants/env.ts";
 
 type TCreateSession = {
     userId: Types.ObjectId,
@@ -165,7 +165,9 @@ export const tokenVerification = async (verificationToken: string) => {
 
 export const requestResetPassword = async (email: string) => {
     const user = await User.findOne({ email });
-    if (!user) throw new AppError("No user found with that email.", 404);
+    // Don't leak too much details, instead 404 error "There is no user with that email.", just return
+    // User will see message: "If an account with that email exists, we sent instructions."
+    if (!user) return;
 
     const resetPasswordToken = generateToken(32);
     const resetPasswordTokenHash = hash(resetPasswordToken);
@@ -173,7 +175,7 @@ export const requestResetPassword = async (email: string) => {
     user.resetPasswordTokenExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    const resetPasswordUrl = `${SERVER_ORIGIN}/reset-password?token=${resetPasswordToken}`;
+    const resetPasswordUrl = `${CLIENT_ORIGIN}/reset-password?token=${resetPasswordToken}`;
     const html = RESET_PASSWORD_TEMPLATE.replace("{resetPasswordUrl}", resetPasswordUrl);
     const { error } = await sendEmail({ to: user.email, subject: "Reset password", html });
 

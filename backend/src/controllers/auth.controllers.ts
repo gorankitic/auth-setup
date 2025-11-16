@@ -152,7 +152,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
     // 3) Send response to the client
     res.status(200).json({
         status: "success",
-        message: "Reset password link has been sent to your email."
+        message: "If an account with that email exists, we sent instructions."
     });
 });
 
