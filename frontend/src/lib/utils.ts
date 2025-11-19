@@ -1,5 +1,6 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { UAParser } from "ua-parser-js";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -18,4 +19,17 @@ export const getInitials = (name: string = "") => {
   const last = parts[parts.length - 1][0];
 
   return (first + last).toUpperCase();
+}
+
+export const parseUserAgent = (ua: string) => {
+  const parser = new UAParser(ua);
+  const browser = parser.getBrowser();
+  const os = parser.getOS();
+  const device = parser.getDevice();
+
+  return {
+    browser: browser.name || "Unknown Browser",
+    os: os.name || "Unknown OS",
+    device: device.type || "desktop"
+  };
 }
