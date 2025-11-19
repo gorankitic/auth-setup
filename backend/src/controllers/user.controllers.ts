@@ -2,7 +2,7 @@
 import { catchAsync } from "src/lib/utils/catchAsync.ts";
 // models
 import User from "src/models/user.model.ts";
-
+// services
 import { updateUserData } from "src/services/user.services.ts";
 
 // Get signed in user

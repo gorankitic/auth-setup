@@ -10,10 +10,12 @@ import { connectDatabase } from "./config/database.ts";
 // constants
 import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
 // middlewares
+import { protect } from "./middleware/authMiddleware.ts";
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
 // (routers)
 import authRouter from "./routes/auth.routes.ts";
 import userRouter from "./routes/user.routes.ts";
+import sessionRouter from "./routes/session.routes.ts";
 // lib
 import { AppError } from "./lib/utils/AppError.ts";
 import { uploadRouter } from "./lib/upload/uploadthing.ts";
@@ -25,11 +27,14 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(express.json());
+app.set("trust proxy", true);
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 app.use("/api/v1/uploadthing", createRouteHandler({ router: uploadRouter }));
+
 // (Routers)
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/users", protect, userRouter);
+app.use("/api/v1/sessions", protect, sessionRouter);
 
 // Catch-all for undefined routes
 app.use((req, res, next) => {

@@ -6,7 +6,8 @@ import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "s
 import { sendEmail } from "src/lib/email/sendEmail.ts";
 import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates.ts";
 // services
-import { createSession, deleteUser, requestResetPassword, resetUserPassword, revokeAllUserSesions, revokeSession, rotateSession, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services.ts";
+import { createSession, revokeAllUserSesions, revokeSession, rotateSession } from "src/services/session.services.ts";
+import { deleteUser, requestResetPassword, resetUserPassword, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services.ts";
 // constants
 import { CLIENT_ORIGIN, SERVER_ORIGIN } from "src/constants/env.ts";
 
@@ -47,9 +48,7 @@ export const signIn = catchAsync(async (req, res, next) => {
     const user = await signinUser({ email, password });
 
     // 3) Create a session & issue tokens
-    const userAgent = req.get("user-agent") ?? "";
-    const ip = req.ip ?? "";
-    const { accessToken, refreshToken } = await createSession({ userId: user._id, role: user.role, userAgent, ip });
+    const { accessToken, refreshToken } = await createSession({ userId: user._id, role: user.role, req });
 
     // 4) Set HttpOnly cookies
     setAccessTokenCookie(accessToken, res);
@@ -70,9 +69,7 @@ export const refresh = catchAsync(async (req, res, next) => {
     }
 
     // 2) Rotate refresh token (revokes old one & creates new session)
-    const userAgent = req.get("user-agent") ?? "";
-    const ip = req.ip ?? "";
-    const { accessToken, refreshToken } = await rotateSession({ refreshToken: incomingRefreshToken, userAgent, ip });
+    const { accessToken, refreshToken } = await rotateSession({ refreshToken: incomingRefreshToken, req });
 
     // 3) Set new HttpOnly cookies
     setAccessTokenCookie(accessToken, res);
@@ -102,7 +99,7 @@ export const signOut = catchAsync(async (req, res, next) => {
     res.status(200).json({ status: "success" });
 });
 
-// Sign out user from all session
+// Sign out user from all sessions
 // POST method
 // Protected route /api/v1/auth/signoutall
 export const signOutAll = catchAsync(async (req, res, next) => {

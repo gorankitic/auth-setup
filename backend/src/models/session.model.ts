@@ -1,18 +1,7 @@
 // modules
-import mongoose, { Schema, Types } from "mongoose";
-
-export interface ISession {
-    _id: Types.ObjectId;
-    userId: Types.ObjectId;
-    refreshTokenHash: string;
-    userAgent?: string;
-    ip?: string;
-    createdAt: Date;
-    lastUsedAt: Date;
-    expiresAt: Date; // Session lifetime, based on refresh token TTL
-    revokedAt?: Date;
-    replacedBy?: Types.ObjectId; // Points to a new session on rotation
-}
+import mongoose, { Schema } from "mongoose";
+// types
+import { ISession } from "src/lib/types/session.types.ts";
 
 const sessionSchema = new Schema<ISession>({
     userId: {
@@ -27,6 +16,12 @@ const sessionSchema = new Schema<ISession>({
         unique: true
     },
     userAgent: String,
+    location: {
+        country: String,
+        city: String,
+        latitude: Number,
+        longitude: Number
+    },
     ip: String,
     createdAt: {
         type: Date,
