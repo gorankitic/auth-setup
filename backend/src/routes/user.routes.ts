@@ -1,9 +1,9 @@
 // modules
 import express from "express";
 // controllers
-import { getUser, updateUser } from "src/controllers/user.controllers.ts";
+import { getUploadcareSignature, getUser, updateAvatar, updateData } from "src/controllers/user.controllers.ts";
 // schemas
-import { updateUserSchema } from "src/lib/schemas/user.schemas.ts";
+import { updateAvatarSchema, updateDataSchema } from "src/lib/schemas/user.schemas.ts";
 // middlewares
 import { validate } from "src/middleware/validateSchema.ts";
 
@@ -11,6 +11,8 @@ const router = express.Router();
 
 router
     .get("/", getUser)
-    .patch("/update", validate(updateUserSchema), updateUser)
+    .get("/signature", getUploadcareSignature)
+    .patch("/update-data", validate(updateDataSchema), updateData)
+    .patch("/update-avatar", validate(updateAvatarSchema), updateAvatar)
 
 export default router;

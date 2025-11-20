@@ -4,7 +4,6 @@ import morgan from "morgan";
 import chalk from "chalk";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { createRouteHandler } from "uploadthing/express";
 // config
 import { connectDatabase } from "./config/database.ts";
 // constants
@@ -18,7 +17,6 @@ import userRouter from "./routes/user.routes.ts";
 import sessionRouter from "./routes/session.routes.ts";
 // lib
 import { AppError } from "./lib/utils/AppError.ts";
-import { uploadRouter } from "./lib/upload/uploadthing.ts";
 
 // Initialize express application
 const app = express();
@@ -29,7 +27,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.set("trust proxy", true);
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
-app.use("/api/v1/uploadthing", createRouteHandler({ router: uploadRouter }));
 
 // (Routers)
 app.use("/api/v1/auth", authRouter);

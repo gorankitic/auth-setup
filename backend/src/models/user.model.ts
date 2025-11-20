@@ -27,7 +27,7 @@ const userSchema = new Schema<IUser>({
         enum: ["admin", "user"],
         default: "user"
     },
-    photoUrl: String,
+    avatarUuid: String,
     isVerified: {
         type: Boolean,
         default: false

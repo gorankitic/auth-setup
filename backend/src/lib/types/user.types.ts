@@ -6,7 +6,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     role: "admin" | "user";
-    photoUrl?: string;
+    avatarUuid?: string;
     isVerified: boolean;
     verificationToken?: string;
     verificationTokenExpiresAt?: Date;

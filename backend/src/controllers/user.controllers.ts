@@ -1,9 +1,15 @@
+// modules
+import { generateSecureSignature } from "@uploadcare/signed-uploads";
 // utils
 import { catchAsync } from "src/lib/utils/catchAsync.ts";
 // models
 import User from "src/models/user.model.ts";
 // services
-import { updateUserData } from "src/services/user.services.ts";
+import { updateUserAvatar, updateUserData } from "src/services/user.services.ts";
+// config
+import { UPLOADCARE_SIGNATURE_LIFETIME } from "src/config/uploadcare.ts";
+// constants
+import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "src/constants/env.ts";
 
 // Get signed in user
 // GET method
@@ -19,30 +25,54 @@ export const getUser = catchAsync(async (req, res, next) => {
             _id: user._id,
             name: user.name,
             email: user.email,
-            photoUrl: user.photoUrl,
+            avatarUuid: user.avatarUuid,
             role: user.role,
             isVerified: user.isVerified
         }
     });
 });
 
-// Update signed in user
+// Update signed in user data
 // PATCH method
-// Protected route /api/v1/users/update
-export const updateUser = catchAsync(async (req, res, next) => {
+// Protected route /api/v1/users/update-data
+export const updateData = catchAsync(async (req, res, next) => {
     // 1) Request validation is done in the validateSchema middleware
-    // 2) Handle business logic, call service to update user document
-    const updatedUser = (await updateUserData((req as any).user._id, req.body))!;
+    // 2) Handle business logic, call service to update user data
+    await updateUserData((req as any).user._id, req.body);
     // 3) Send response to the client
     res.status(201).json({
         status: "success",
-        user: {
-            _id: updatedUser._id,
-            name: updatedUser.name,
-            email: updatedUser.email,
-            role: updatedUser.role,
-            isVerified: updatedUser.isVerified,
-            photoUrl: updatedUser.photoUrl,
-        }
+        message: "Your account has been successfully updated."
+    });
+});
+
+// Update signed in user avatar
+// PATCH method
+// Protected route /api/v1/users/update-avatar
+export const updateAvatar = catchAsync(async (req, res, next) => {
+    const { avatarUuid } = req.body;
+    // 1) Request validation is done in the validateSchema middleware
+    // 2) Handle business logic, call service to update user avatarUuid
+    await updateUserAvatar((req as any).user._id, avatarUuid);
+    // 3) Send response to the client
+    res.status(201).json({
+        status: "success",
+        message: "Your avatar has been successfully updated."
+    });
+});
+
+// Get signature for upload
+// GET method
+// Protected route /api/v1/users/signature
+export const getUploadcareSignature = catchAsync((req, res) => {
+    const secretKey = UPLOADCARE_SECRET_KEY;
+    const publicKey = UPLOADCARE_PUBLIC_KEY;
+
+    const { secureSignature, secureExpire } = generateSecureSignature(secretKey, { lifetime: UPLOADCARE_SIGNATURE_LIFETIME });
+
+    res.status(200).json({
+        secureSignature,
+        secureExpire,
+        publicKey,
     });
 });
