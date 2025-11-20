@@ -33,3 +33,10 @@ export const parseUserAgent = (ua: string) => {
     device: device.type || "desktop"
   };
 }
+
+export const getAvatarUrl = (uuid?: string | null) => {
+  if (!uuid) return null;
+
+  // Uploadcare optimized avatar transformation
+  return `https://ucarecdn.com/${uuid}/-/scale_crop/256x256/smart/-/quality/smart/-/format/auto/`;
+};

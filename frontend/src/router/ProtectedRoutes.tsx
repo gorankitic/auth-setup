@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 // components
 import Loader from "@/components/Loader";
 // hooks
-import { useUser } from "@/features/authentication/useUser";
+import { useUser } from "@/features/user/useUser";
 
 const ProtectedRoutes = () => {
     const { user, isPending } = useUser();

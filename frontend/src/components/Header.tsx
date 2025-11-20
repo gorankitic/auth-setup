@@ -3,7 +3,7 @@ import { Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 // components
-import UserButton from "@/components/UserButton";
+import UserButton from "@/features/user/UserButton";
 
 const Header = () => {
     return (

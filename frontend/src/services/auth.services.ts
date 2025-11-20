@@ -1,5 +1,5 @@
 // lib
-import api from "@/lib/apiClient";
+import api from "@/lib/config/apiClient";
 // types
 import type { ForgotPasswordSchema, SignInSchema, SignUpSchema, UpdatePasswordSchema } from "@/lib/schemas/auth.schema";
 

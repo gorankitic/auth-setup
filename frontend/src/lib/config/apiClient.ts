@@ -81,7 +81,6 @@ api.interceptors.response.use(
     }
 );
 
-export default api;
 
 export function normalizeApiError(error: unknown): NormalizedError {
     // Axios error
@@ -107,3 +106,5 @@ export function normalizeApiError(error: unknown): NormalizedError {
         statusCode: 500,
     };
 }
+
+export default api;

@@ -10,11 +10,11 @@ import VerificationFailed from "@/pages/VerificationFailed";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 // route-wrappers
-import ProtectedRoutes from "./ProtectedRoutes";
-import PublicRoutes from "./PublicRoutes";
+import ProtectedRoutes from "@/router/ProtectedRoutes";
+import PublicRoutes from "@/router/PublicRoutes";
 // layouts
-import ProtectedLayout from "../layout/ProtectedLayout";
-import PublicLayout from "../layout/PublicLayout";
+import ProtectedLayout from "@/layout/ProtectedLayout";
+import PublicLayout from "@/layout/PublicLayout";
 
 const router = createBrowserRouter([
     {

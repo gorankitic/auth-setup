@@ -2,10 +2,10 @@
 import { useNavigate } from "react-router";
 import { Bell, LogOut, Settings } from "lucide-react";
 // hooks
-import { useUser } from "@/features/authentication/useUser";
+import { useUser } from "@/features/user/useUser";
 import { useSignOut } from "@/features/authentication/useSignOut";
 // utils
-import { getInitials } from "@/lib/utils";
+import { getAvatarUrl, getInitials } from "@/lib/utils";
 // components
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -22,8 +22,8 @@ const UserButton = () => {
             <DropdownMenuTrigger>
                 <div className="relative cursor-pointer">
                     <Avatar className="size-8" aria-label={`Avatar of ${user.name}`}>
-                        {user.photoUrl && <img src={user.photoUrl} className="object-cover w-full h-full" />}
-                        {!user.photoUrl && (
+                        {user.avatarUuid && <img src={getAvatarUrl(user.avatarUuid)!} className="object-cover w-full h-full" />}
+                        {!user.avatarUuid && (
                             <AvatarFallback>
                                 {getInitials(user.name)}
                             </AvatarFallback>
@@ -33,9 +33,9 @@ const UserButton = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-64 px-5 py-3" align="end">
                 <div className="mb-2 flex items-center gap-3">
-                    {user.photoUrl ? (
+                    {user.avatarUuid ? (
                         <img
-                            src={user.photoUrl}
+                            src={getAvatarUrl(user.avatarUuid)!}
                             alt={user.name!}
                             className="rounded-full object-cover size-10"
                         />
