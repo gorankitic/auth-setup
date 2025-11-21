@@ -15,7 +15,7 @@ import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "src/constants/env.
 // GET method
 // Protected route /api/v1/users
 export const getUser = catchAsync(async (req, res, next) => {
-    const userId = (req as any).user._id;
+    const userId = req.user._id;
 
     const user = (await User.findById(userId))!;
 
@@ -38,7 +38,7 @@ export const getUser = catchAsync(async (req, res, next) => {
 export const updateData = catchAsync(async (req, res, next) => {
     // 1) Request validation is done in the validateSchema middleware
     // 2) Handle business logic, call service to update user data
-    await updateUserData((req as any).user._id, req.body);
+    await updateUserData(req.user._id, req.body);
     // 3) Send response to the client
     res.status(201).json({
         status: "success",
@@ -53,7 +53,7 @@ export const updateAvatar = catchAsync(async (req, res, next) => {
     const { avatarUuid } = req.body;
     // 1) Request validation is done in the validateSchema middleware
     // 2) Handle business logic, call service to update user avatarUuid
-    await updateUserAvatar((req as any).user._id, avatarUuid);
+    await updateUserAvatar(req.user._id, avatarUuid);
     // 3) Send response to the client
     res.status(201).json({
         status: "success",

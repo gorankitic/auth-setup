@@ -10,7 +10,7 @@ const globalLimiter = new RateLimiterMemory({
 
 export const globalRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await globalLimiter.consume((req as any).ip);
+        await globalLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
         res.set("Retry-After", String(Math.ceil(err.msBeforeNext / 1000)));
@@ -30,7 +30,7 @@ const authLimiter = new RateLimiterMemory({
 
 export const authRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await authLimiter.consume((req as any).ip);
+        await authLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
         res.set("Retry-After", String(Math.ceil(err.msBeforeNext / 1000)));
@@ -50,7 +50,7 @@ const refreshLimiter = new RateLimiterMemory({
 
 export const refreshRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await refreshLimiter.consume((req as any).ip);
+        await refreshLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
         res.set("Retry-After", String(Math.ceil(err.msBeforeNext / 1000)));
@@ -69,7 +69,7 @@ const uploadLimiter = new RateLimiterMemory({
 
 export const uploadRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await uploadLimiter.consume((req as any).ip);
+        await uploadLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
         res.set("Retry-After", String(Math.ceil(err.msBeforeNext / 1000)));

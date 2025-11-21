@@ -32,8 +32,8 @@ export const protect = catchAsync(async (req, res, next) => {
         return next(new AppError("You changed password recently. Please sign in again.", 401));
     }
     // 6) Grant access to protected route and assign user to request object
-    (req as any).user = user;
-    (req as any).session = session;
+    req.user = user;
+    req.session = session;
 
     next();
 });

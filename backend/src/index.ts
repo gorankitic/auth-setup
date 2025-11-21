@@ -27,7 +27,7 @@ const app = express();
 
 // MIDDLEWARES
 // 1) Trust proxy (example: Render)
-app.set("trust proxy", true);
+app.set("trust proxy", 1);
 // 2) Cors
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 // 3) Security headers

@@ -104,7 +104,7 @@ export const signOut = catchAsync(async (req, res, next) => {
 // Protected route /api/v1/auth/signoutall
 export const signOutAll = catchAsync(async (req, res, next) => {
     // 1) Check for authenticated user id
-    const userId = (req as any).user._id;
+    const userId = req.user._id;
     if (!userId) return next(new AppError("You are not authorized to perform this action.", 401));
 
     // 2) Revoke all device sessions
@@ -180,7 +180,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 export const updatePassword = catchAsync(async (req, res, next) => {
     // 1) Request validation is done in the validateSchema middleware
     const { currentPassword, newPassword } = req.body;
-    const userId = (req as any).user._id;
+    const userId = req.user._id;
 
     // 2) Call service to update user password
     await updateUserPassword(userId, currentPassword, newPassword);
