@@ -1,9 +1,12 @@
 // modules
 import express from "express";
+import helmet from "helmet";
 import morgan from "morgan";
 import chalk from "chalk";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import mongoSanitize from "express-mongo-sanitize";
+import hpp from "hpp";
 // config
 import { connectDatabase } from "./config/database.ts";
 // constants
@@ -11,6 +14,7 @@ import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
 // middlewares
 import { protect } from "./middleware/authMiddleware.ts";
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
+import { globalRateLimiter } from "./middleware/rateLimiters.ts";
 // (routers)
 import authRouter from "./routes/auth.routes.ts";
 import userRouter from "./routes/user.routes.ts";
@@ -22,11 +26,24 @@ import { AppError } from "./lib/utils/AppError.ts";
 const app = express();
 
 // MIDDLEWARES
-app.use(morgan("dev"));
-app.use(cookieParser());
-app.use(express.json());
+// 1) Trust proxy (example: Render)
 app.set("trust proxy", true);
+// 2) Cors
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
+// 3) Security headers
+app.use(helmet({ contentSecurityPolicy: false }));
+// 4) Body parsing + size limit
+app.use(express.json({ limit: "10kb" }));
+// 5) Cookie parser
+app.use(cookieParser());
+// 6) Logging
+app.use(morgan(NODE_ENV === "production" ? "combined" : "dev"));
+// 7) Global rate limiter
+app.use("/api", globalRateLimiter);
+// 8) Sanitize request against NoSQL injection
+app.use(mongoSanitize());
+// 9). Prevent HTTP parameter pollution
+app.use(hpp());
 
 // (Routers)
 app.use("/api/v1/auth", authRouter);

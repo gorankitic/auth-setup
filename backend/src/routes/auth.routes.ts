@@ -7,18 +7,19 @@ import { forgotPasswordSchema, resetPasswordSchema, signinSchema, signupSchema, 
 // middlewares
 import { validate } from "src/middleware/validateSchema.ts";
 import { protect } from "src/middleware/authMiddleware.ts";
+import { authRateLimiter, refreshRateLimiter } from "src/middleware/rateLimiters.ts";
 
 const router = express.Router();
 
 router
-    .post("/signup", validate(signupSchema), signUp)
-    .post("/signin", validate(signinSchema), signIn)
-    .post("/refresh", refresh)
+    .post("/signup", authRateLimiter, validate(signupSchema), signUp)
+    .post("/signin", authRateLimiter, validate(signinSchema), signIn)
+    .post("/refresh", refreshRateLimiter, refresh)
     .post("/signout", protect, signOut)
     .post("/signoutall", protect, signOutAll)
-    .post("/forgot-password", validate(forgotPasswordSchema), forgotPassword)
-    .patch("/reset-password", validate(resetPasswordSchema), resetPassword)
-    .patch("/update-password", protect, validate(updatePasswordSchema), updatePassword)
+    .post("/forgot-password", authRateLimiter, validate(forgotPasswordSchema), forgotPassword)
+    .patch("/reset-password", authRateLimiter, validate(resetPasswordSchema), resetPassword)
+    .patch("/update-password", protect, authRateLimiter, validate(updatePasswordSchema), updatePassword)
     .get("/verification", verification)
 
 export default router;
