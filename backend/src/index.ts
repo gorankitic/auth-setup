@@ -5,7 +5,6 @@ import morgan from "morgan";
 import chalk from "chalk";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 // config
 import { connectDatabase } from "./config/database.ts";
@@ -15,6 +14,7 @@ import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
 import { protect } from "./middleware/authMiddleware.ts";
 import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
 import { globalRateLimiter } from "./middleware/rateLimiters.ts";
+import { sanitizeMongo } from "./middleware/sanitizeMongo.ts";
 // (routers)
 import authRouter from "./routes/auth.routes.ts";
 import userRouter from "./routes/user.routes.ts";
@@ -41,7 +41,7 @@ app.use(morgan(NODE_ENV === "production" ? "combined" : "dev"));
 // 7) Global rate limiter
 app.use("/api", globalRateLimiter);
 // 8) Sanitize request against NoSQL injection
-app.use(mongoSanitize());
+app.use(sanitizeMongo);
 // 9). Prevent HTTP parameter pollution
 app.use(hpp());
 
