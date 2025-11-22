@@ -1,11 +1,11 @@
 // modules
 import { deleteFile } from "@uploadcare/rest-client";
 // config
-import { uploadcareAuth } from "src/config/uploadcare.ts";
+import { uploadcareAuth } from "src/config/uploadcare";
 // models
-import User from "src/models/user.model.ts";
+import User from "src/models/user.model";
 // schemas
-import { UpdateDataSchema } from "../lib/schemas/user.schemas.ts";
+import { UpdateDataSchema } from "../lib/schemas/user.schemas";
 
 export const updateUserData = async (id: string, data: UpdateDataSchema) => {
     const updatedUser = await User.findByIdAndUpdate(id, data, {

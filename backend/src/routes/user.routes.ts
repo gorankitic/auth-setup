@@ -1,12 +1,12 @@
 // modules
 import express from "express";
 // controllers
-import { getUploadcareSignature, getUser, updateAvatar, updateData } from "src/controllers/user.controllers.ts";
+import { getUploadcareSignature, getUser, updateAvatar, updateData } from "src/controllers/user.controllers";
 // schemas
-import { updateAvatarSchema, updateDataSchema } from "src/lib/schemas/user.schemas.ts";
+import { updateAvatarSchema, updateDataSchema } from "src/lib/schemas/user.schemas";
 // middlewares
-import { validate } from "src/middleware/validateSchema.ts";
-import { uploadRateLimiter } from "src/middleware/rateLimiters.ts";
+import { validate } from "src/middleware/validateSchema";
+import { uploadRateLimiter } from "src/middleware/rateLimiters";
 
 const router = express.Router();
 

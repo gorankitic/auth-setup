@@ -1,7 +1,7 @@
 // modules
 import { Response, CookieOptions } from "express";
 // constants
-import { JWT_ACCESS_TOKEN_TTL_MS, NODE_ENV } from "src/constants/env.ts";
+import { JWT_ACCESS_TOKEN_TTL_MS, NODE_ENV } from "src/constants/env";
 
 const cookieOptions: CookieOptions = {
     httpOnly: true,

@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 import chalk from "chalk";
 // constants
-import { MONGO_URI } from "src/constants/env.js";
+import { MONGO_URI } from "src/constants/env";
 
 export const connectDatabase = async () => {
     try {

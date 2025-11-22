@@ -1,7 +1,7 @@
 // utils
-import { catchAsync } from "src/lib/utils/catchAsync.ts";
+import { catchAsync } from "src/lib/utils/catchAsync";
 // models
-import { findAllUserSessions } from "src/services/session.services.ts";
+import { findAllUserSessions } from "src/services/session.services";
 
 export const getSessions = catchAsync(async (req, res) => {
     const userId = req.user._id;

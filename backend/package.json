@@ -8,6 +8,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "node --import=tsx --env-file=.env --watch src/index.ts",
+    "start": "node build/index.js",
     "build": "tsc"
   },
   "dependencies": {

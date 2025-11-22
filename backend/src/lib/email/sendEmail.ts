@@ -1,5 +1,5 @@
 // utils
-import { resend } from "./resend.ts";
+import { resend } from "./resend";
 
 type EmailInput = {
     to: string,

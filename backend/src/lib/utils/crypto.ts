@@ -1,7 +1,7 @@
 // modules
 import crypto from "crypto";
 // constants
-import { TOKEN_BYTES } from "src/constants/env.ts";
+import { TOKEN_BYTES } from "src/constants/env";
 
 export const hash = (token: string) => crypto.createHash("sha256").update(token).digest("hex");
 

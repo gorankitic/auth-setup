@@ -1,13 +1,13 @@
 // modules
 import express from "express";
 // controllers
-import { forgotPassword, refresh, resetPassword, signIn, signOut, signOutAll, signUp, updatePassword, verification } from "src/controllers/auth.controllers.ts";
+import { forgotPassword, refresh, resetPassword, signIn, signOut, signOutAll, signUp, updatePassword, verification } from "src/controllers/auth.controllers";
 // schemas
-import { forgotPasswordSchema, resetPasswordSchema, signinSchema, signupSchema, updatePasswordSchema } from "src/lib/schemas/auth.schemas.ts";
+import { forgotPasswordSchema, resetPasswordSchema, signinSchema, signupSchema, updatePasswordSchema } from "src/lib/schemas/auth.schemas";
 // middlewares
-import { validate } from "src/middleware/validateSchema.ts";
-import { protect } from "src/middleware/authMiddleware.ts";
-import { authRateLimiter, refreshRateLimiter } from "src/middleware/rateLimiters.ts";
+import { validate } from "src/middleware/validateSchema";
+import { protect } from "src/middleware/authMiddleware";
+import { authRateLimiter, refreshRateLimiter } from "src/middleware/rateLimiters";
 
 const router = express.Router();
 

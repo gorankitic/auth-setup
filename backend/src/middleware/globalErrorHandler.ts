@@ -3,9 +3,9 @@ import { NextFunction, Response, Request } from "express";
 import z from "zod";
 import chalk from "chalk";
 // constants
-import { NODE_ENV } from "src/constants/env.ts";
+import { NODE_ENV } from "src/constants/env";
 // utils
-import { AppError } from "src/lib/utils/AppError.ts";
+import { AppError } from "src/lib/utils/AppError";
 
 // 🔥 HANDLING MONGOOSE ERRORS
 // Handling invalid database IDs

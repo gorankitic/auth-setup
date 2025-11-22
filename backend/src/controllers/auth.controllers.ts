@@ -1,15 +1,15 @@
 // utils
-import { AppError } from "src/lib/utils/AppError.ts";
-import { catchAsync } from "src/lib/utils/catchAsync.ts";
-import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "src/lib/utils/cookies.ts";
+import { AppError } from "src/lib/utils/AppError";
+import { catchAsync } from "src/lib/utils/catchAsync";
+import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "src/lib/utils/cookies";
 // email
-import { sendEmail } from "src/lib/email/sendEmail.ts";
-import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates.ts";
+import { sendEmail } from "src/lib/email/sendEmail";
+import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates";
 // services
-import { createSession, revokeAllUserSesions, revokeSession, rotateSession } from "src/services/session.services.ts";
-import { deleteUser, requestResetPassword, resetUserPassword, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services.ts";
+import { createSession, revokeAllUserSesions, revokeSession, rotateSession } from "src/services/session.services";
+import { deleteUser, requestResetPassword, resetUserPassword, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services";
 // constants
-import { CLIENT_ORIGIN, SERVER_ORIGIN } from "src/constants/env.ts";
+import { CLIENT_ORIGIN, SERVER_ORIGIN } from "src/constants/env";
 
 // Sign up user
 // POST method

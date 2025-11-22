@@ -1,17 +1,17 @@
 // modules
 import { Types } from "mongoose";
 // schemas & types
-import { TCreateSession, TRotateSession } from "src/lib/types/session.types.ts";
+import { TCreateSession, TRotateSession } from "src/lib/types/session.types";
 // utils
-import { signJWT } from "src/lib/utils/jwt.ts";
-import { AppError } from "src/lib/utils/AppError.ts";
-import { generateToken, hash } from "src/lib/utils/crypto.ts";
+import { signJWT } from "src/lib/utils/jwt";
+import { AppError } from "src/lib/utils/AppError";
+import { generateToken, hash } from "src/lib/utils/crypto";
 // models
-import Session from "src/models/session.model.ts";
+import Session from "src/models/session.model";
 // constants
-import { REFRESH_TOKEN_TTL_MS } from "src/constants/env.ts";
+import { REFRESH_TOKEN_TTL_MS } from "src/constants/env";
 // services
-import { getLocation } from "./location.services.ts";
+import { getLocation } from "./location.services";
 
 export const createSession = async ({ userId, role, req }: TCreateSession) => {
     // 1) Generate opaque refresh token

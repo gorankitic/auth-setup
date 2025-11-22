@@ -1,15 +1,15 @@
 // modules
 import { generateSecureSignature } from "@uploadcare/signed-uploads";
 // utils
-import { catchAsync } from "src/lib/utils/catchAsync.ts";
+import { catchAsync } from "src/lib/utils/catchAsync";
 // models
-import User from "src/models/user.model.ts";
+import User from "src/models/user.model";
 // services
-import { updateUserAvatar, updateUserData } from "src/services/user.services.ts";
+import { updateUserAvatar, updateUserData } from "src/services/user.services";
 // config
-import { UPLOADCARE_SIGNATURE_LIFETIME } from "src/config/uploadcare.ts";
+import { UPLOADCARE_SIGNATURE_LIFETIME } from "src/config/uploadcare";
 // constants
-import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "src/constants/env.ts";
+import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "src/constants/env";
 
 // Get signed in user
 // GET method

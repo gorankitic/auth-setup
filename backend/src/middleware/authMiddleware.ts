@@ -1,10 +1,10 @@
 // utils
-import { AppError } from "src/lib/utils/AppError.ts";
-import { catchAsync } from "src/lib/utils/catchAsync.ts";
-import { verifyJWT } from "src/lib/utils/jwt.ts";
+import { AppError } from "src/lib/utils/AppError";
+import { catchAsync } from "src/lib/utils/catchAsync";
+import { verifyJWT } from "src/lib/utils/jwt";
 // models
-import User from "src/models/user.model.ts";
-import Session from "src/models/session.model.ts";
+import User from "src/models/user.model";
+import Session from "src/models/session.model";
 
 // Authentication middleware to protect routes from unauthenticated access
 export const protect = catchAsync(async (req, res, next) => {

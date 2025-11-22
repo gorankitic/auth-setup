@@ -1,17 +1,17 @@
 // utils
-import { AppError } from "src/lib/utils/AppError.ts";
-import { generateToken, hash } from "src/lib/utils/crypto.ts";
+import { AppError } from "src/lib/utils/AppError";
+import { generateToken, hash } from "src/lib/utils/crypto";
 // schemas & types
-import { SigninSchema, SignupSchema } from "src/lib/schemas/auth.schemas.ts";
+import { SigninSchema, SignupSchema } from "src/lib/schemas/auth.schemas";
 // email
-import { sendEmail } from "src/lib/email/sendEmail.ts";
-import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates.ts";
+import { sendEmail } from "src/lib/email/sendEmail";
+import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates";
 // models
-import User from "src/models/user.model.ts";
+import User from "src/models/user.model";
 // constants
-import { CLIENT_ORIGIN } from "src/constants/env.ts";
+import { CLIENT_ORIGIN } from "src/constants/env";
 // services
-import { revokeAllUserSesions } from "./session.services.ts";
+import { revokeAllUserSesions } from "./session.services";
 
 export const signupUser = async ({ name, email, password }: SignupSchema) => {
     // 1) Initial check if user already exists in database

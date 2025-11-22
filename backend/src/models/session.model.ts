@@ -1,7 +1,7 @@
 // modules
 import mongoose, { Schema } from "mongoose";
 // types
-import { ISession } from "src/lib/types/session.types.ts";
+import { ISession } from "src/lib/types/session.types";
 
 const sessionSchema = new Schema<ISession>({
     userId: {

@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 // types
-import { IUser } from "src/lib/types/user.types.ts";
+import { IUser } from "src/lib/types/user.types";
 
 const userSchema = new Schema<IUser>({
     name: {

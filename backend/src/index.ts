@@ -7,20 +7,20 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import hpp from "hpp";
 // config
-import { connectDatabase } from "./config/database.ts";
+import { connectDatabase } from "./config/database";
 // constants
-import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env.ts";
+import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 // middlewares
-import { protect } from "./middleware/authMiddleware.ts";
-import { globalErrorHandler } from "./middleware/globalErrorHandler.ts";
-import { globalRateLimiter } from "./middleware/rateLimiters.ts";
-import { sanitizeMongo } from "./middleware/sanitizeMongo.ts";
+import { protect } from "./middleware/authMiddleware";
+import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import { globalRateLimiter } from "./middleware/rateLimiters";
+import { sanitizeMongo } from "./middleware/sanitizeMongo";
 // (routers)
-import authRouter from "./routes/auth.routes.ts";
-import userRouter from "./routes/user.routes.ts";
-import sessionRouter from "./routes/session.routes.ts";
+import authRouter from "./routes/auth.routes";
+import userRouter from "./routes/user.routes";
+import sessionRouter from "./routes/session.routes";
 // lib
-import { AppError } from "./lib/utils/AppError.ts";
+import { AppError } from "./lib/utils/AppError";
 
 // Initialize express application
 const app = express();
