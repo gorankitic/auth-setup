@@ -9,7 +9,11 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "outDir": "./build",
-    "baseUrl": "."
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "src/*": ["*"]
+    }
   },
   "include": ["src"]
 }

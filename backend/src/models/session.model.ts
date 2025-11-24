@@ -16,12 +16,7 @@ const sessionSchema = new Schema<ISession>({
         unique: true
     },
     userAgent: String,
-    location: {
-        country: String,
-        city: String,
-        latitude: Number,
-        longitude: Number
-    },
+    location: String,
     ip: String,
     createdAt: {
         type: Date,

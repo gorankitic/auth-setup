@@ -19,9 +19,10 @@ export const createSession = async ({ userId, role, req }: TCreateSession) => {
     const refreshTokenHash = hash(refreshToken);
 
     // 2) Get location, userAgent & IP address
-    const location = getLocation(req);
     const userAgent = req.get("user-agent") ?? "";
-    const ip = req.ip ?? "";
+    const locationResponse = await getLocation(req);
+    const location = locationResponse?.location;
+    const ip = locationResponse?.ip;
 
     // 3) Store session into database (per device)
     const session = await Session.create({
@@ -57,9 +58,9 @@ export const rotateSession = async ({ refreshToken, req }: TRotateSession) => {
     const newRefreshTokenHash = hash(newRefreshToken);
 
     // 3) Get location
-    const location = getLocation(req);
     const userAgent = req.get("user-agent") ?? "";
     const ip = req.ip ?? "";
+    const location = getLocation(req);
 
     // 4) Create a new session
     const newSession = await Session.create({

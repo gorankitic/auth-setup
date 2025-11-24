@@ -26,3 +26,5 @@ export const RESEND_API_KEY = getEnv("RESEND_API_KEY");
 
 export const UPLOADCARE_PUBLIC_KEY = getEnv("UPLOADCARE_PUBLIC_KEY");
 export const UPLOADCARE_SECRET_KEY = getEnv("UPLOADCARE_SECRET_KEY");
+
+export const IPINFO_TOKEN = getEnv("IPINFO_TOKEN");

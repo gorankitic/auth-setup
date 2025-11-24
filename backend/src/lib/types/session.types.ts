@@ -7,20 +7,13 @@ export interface ISession {
     userId: Types.ObjectId;
     refreshTokenHash: string;
     userAgent?: string;
-    location?: ILocation;
+    location?: string;
     ip?: string;
     createdAt: Date;
     lastUsedAt: Date;
     expiresAt: Date; // Session lifetime, based on refresh token TTL
     revokedAt?: Date;
     replacedBy?: Types.ObjectId; // Points to a new session on rotation
-}
-
-export interface ILocation {
-    country?: string;
-    city?: string;
-    latitude?: number;
-    longitude?: number;
 }
 
 export type TCreateSession = {

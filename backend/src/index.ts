@@ -1,4 +1,6 @@
 // modules
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -26,8 +28,8 @@ import { AppError } from "./lib/utils/AppError";
 const app = express();
 
 // MIDDLEWARES
-// 1) Trust proxy (example: Render)
-app.set("trust proxy", 1);
+// 1) Trust proxy
+app.set("trust proxy", true);
 // 2) Cors
 app.use(cors({ origin: CLIENT_ORIGIN, credentials: true }));
 // 3) Security headers
