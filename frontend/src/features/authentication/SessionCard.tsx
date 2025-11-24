@@ -22,12 +22,12 @@ const SessionCard = ({ session, isCurrent }: SessionCardProps) => {
     const lastUsed = formatDistanceToNow(new Date(session.lastUsedAt), { addSuffix: true });
 
     return (
-        <div className={cn("border rounded-lg p-4 shadow-sm", isCurrent ? "border-blue-500 bg-blue-50/50" : "border-gray-200")}>
+        <div className={cn("border rounded-lg py-3 px-5 shadow-sm text-gray-600", isCurrent ? "border-blue-500 bg-blue-50/50" : "border-gray-200")}>
             <div className="flex gap-1 items-center mb-1">
-                <DeviceIcon className="size-6 text-gray-600" />
-                <p className="font-medium text-gray-800">{browser} on {os}</p>
+                <DeviceIcon className="size-6" />
+                <p className="font-medium">{browser} on {os}</p>
             </div>
-            <div className="ml-1 flex flex-col gap-1 text-sm text-gray-600">
+            <div className="ml-1 flex flex-col gap-1 text-sm">
                 {isCurrent && (
                     <p className="text-blue-500 font-medium flex items-center gap-1">
                         <CheckCircle className="size-4" />

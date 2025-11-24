@@ -21,14 +21,16 @@ const Sessions = () => {
     }
 
     return (
-        <div className="flex flex-col space-y-5">
-            {sessions && sessions.map((session: any) => (
-                <SessionCard
-                    key={session._id}
-                    session={session}
-                    isCurrent={session._id === currentSessionId}
-                />
-            ))}
+        <>
+            <div className="flex flex-col space-y-3 mb-5">
+                {sessions && sessions.map((session: any) => (
+                    <SessionCard
+                        key={session._id}
+                        session={session}
+                        isCurrent={session._id === currentSessionId}
+                    />
+                ))}
+            </div>
             <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -43,7 +45,7 @@ const Sessions = () => {
                     </>
                 )}
             </motion.button>
-        </div>
+        </>
     )
 }
 
