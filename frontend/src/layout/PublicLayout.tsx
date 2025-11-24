@@ -3,8 +3,10 @@ import { Outlet } from "react-router-dom";
 
 const PublicLayout = () => {
     return (
-        <main className="flex flex-1 justify-center items-center min-h-screen">
-            <Outlet />
+        <main className="flex min-h-screen items-center justify-center px-4">
+            <div className="w-full max-w-sm sm:max-w-md">
+                <Outlet />
+            </div>
         </main>
     )
 }

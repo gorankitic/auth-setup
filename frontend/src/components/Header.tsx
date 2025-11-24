@@ -7,7 +7,7 @@ import UserButton from "@/features/user/UserButton";
 
 const Header = () => {
     return (
-        <div className="my-4 flex items-center justify-between">
+        <div className="my-5 flex items-center justify-between">
             <motion.div
                 className="p-1 rounded-md cursor-pointer"
                 whileHover={{ scale: 1.03 }}

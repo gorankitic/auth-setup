@@ -37,9 +37,9 @@ const UpdateUserDataForm = () => {
                         placeholder="Email"
                         autoComplete="off"
                         disabled
-                        className="w-full pl-10 pr-4 py-1 rounded-md bg-white placeholder-gray-400 border border-gray-300 focus:outline-blue-600 disabled:bg-gray-100"
+                        className="w-full pl-10 pr-4 py-1 rounded-md bg-white text-gray-700 placeholder-gray-400 border border-gray-300 focus:outline-blue-600 disabled:bg-gray-100"
                     />
-                    <Mail className="size-4 absolute left-3 top-[9px] text-gray-500 pointer-events-none" />
+                    <Mail className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                 </div>
                 <div className="relative">
@@ -50,9 +50,9 @@ const UpdateUserDataForm = () => {
                         placeholder="Name"
                         autoComplete="off"
                         disabled={isPending}
-                        className="w-full pl-10 pr-4 py-1 rounded-md bg-white placeholder-gray-400 border border-gray-300 focus:outline-blue-600"
+                        className="w-full pl-10 pr-4 py-1 rounded-md bg-white text-gray-700 placeholder-gray-400 border border-gray-300 focus:outline-blue-600"
                     />
-                    <User className="size-4 absolute left-3 top-[9px] text-gray-500 pointer-events-none" />
+                    <User className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                 </div>
             </div>

@@ -1,6 +1,6 @@
 const Footer = () => {
     return (
-        <footer className='px-4 pt-3 pb-5 text-center text-xs text-gray-500'>
+        <footer className='my-5 text-center text-xs text-gray-500'>
             <p>
                 &copy; {new Date().getFullYear()} Goran Kitic
             </p>

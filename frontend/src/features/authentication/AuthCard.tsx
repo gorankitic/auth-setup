@@ -12,7 +12,7 @@ type AuthCardProps = {
 const AuthCard = ({ children, title, backLinkHref, label }: AuthCardProps) => {
 
     return (
-        <div className="max-w-lg w-full bg-gray-100 rounded-lg shadow-md overflow-hidden">
+        <div className="bg-gray-100 rounded-lg shadow-md overflow-hidden">
             <div className="py-8 px-5">
                 <h1 className="text-2xl mb-8 font-bold text-center bg-linear-to-r from-blue-300 to-blue-700 text-transparent bg-clip-text">
                     {title}

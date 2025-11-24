@@ -33,15 +33,15 @@ const UpdatePasswordForm = () => {
                         disabled={isPending}
                         className="w-full pl-10 pr-4 py-1 rounded-md bg-white text-gray-700 placeholder-gray-400 border border-gray-300 focus:outline-blue-600"
                     />
-                    <KeyRound className="size-4 absolute left-3 top-[9px] text-gray-500 pointer-events-none" />
+                    <KeyRound className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     {!passwordVisible ? (
                         <Eye
                             onClick={() => setPasswordVisible(prev => !prev)}
-                            className="size-4 absolute right-3 top-[9px] text-gray-500 cursor-pointer"
+                            className="size-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
                         />) : (
                         <EyeOff
                             onClick={() => setPasswordVisible(prev => !prev)}
-                            className="size-4 absolute right-3 top-[9px] text-gray-500 cursor-pointer"
+                            className="size-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
                         />
                     )}
                     {errors.currentPassword && <p className="text-red-500 text-sm mt-1">{errors.currentPassword.message}</p>}
@@ -55,15 +55,15 @@ const UpdatePasswordForm = () => {
                         disabled={isPending}
                         className="w-full pl-10 pr-4 py-1 rounded-md bg-white text-gray-700 placeholder-gray-400 border border-gray-300 focus:outline-blue-600"
                     />
-                    <KeyRound className="size-4 absolute left-3 top-[9px] text-gray-500 pointer-events-none" />
+                    <KeyRound className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                     {!newPasswordVisible ? (
                         <Eye
                             onClick={() => setNewPasswordVisible(prev => !prev)}
-                            className="size-4 absolute right-3 top-[9px] text-gray-500 cursor-pointer"
+                            className="size-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
                         />) : (
                         <EyeOff
                             onClick={() => setNewPasswordVisible(prev => !prev)}
-                            className="size-4 absolute right-3 top-[9px] text-gray-500 cursor-pointer"
+                            className="size-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
                         />
                     )}
                     {errors.newPassword && <p className="text-red-500 text-sm mt-1">{errors.newPassword.message}</p>}
