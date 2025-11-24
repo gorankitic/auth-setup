@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import helmet from "helmet";
-import morgan from "morgan";
 import chalk from "chalk";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -15,6 +14,7 @@ import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 // middlewares
 import { protect } from "./middleware/authMiddleware";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
+import { requestLogger } from "./middleware/requestLogger";
 import { globalRateLimiter } from "./middleware/rateLimiters";
 import { sanitizeMongo } from "./middleware/sanitizeMongo";
 // (routers)
@@ -39,7 +39,7 @@ app.use(express.json({ limit: "10kb" }));
 // 5) Cookie parser
 app.use(cookieParser());
 // 6) Logging
-app.use(morgan(NODE_ENV === "production" ? "combined" : "dev"));
+app.use(requestLogger);
 // 7) Global rate limiter
 app.use("/api", globalRateLimiter);
 // 8) Sanitize request against NoSQL injection

@@ -59,8 +59,9 @@ export const rotateSession = async ({ refreshToken, req }: TRotateSession) => {
 
     // 3) Get location
     const userAgent = req.get("user-agent") ?? "";
-    const ip = req.ip ?? "";
-    const location = getLocation(req);
+    const locationResponse = await getLocation(req);
+    const location = locationResponse?.location;
+    const ip = locationResponse?.ip;
 
     // 4) Create a new session
     const newSession = await Session.create({
