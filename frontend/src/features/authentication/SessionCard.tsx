@@ -9,10 +9,7 @@ interface SessionCardProps {
         _id: string;
         userAgent: string;
         lastUsedAt: string;
-        location?: {
-            city?: string;
-            country?: string;
-        };
+        location?: string;
     };
     isCurrent: boolean;
 }
@@ -21,9 +18,7 @@ const SessionCard = ({ session, isCurrent }: SessionCardProps) => {
     const { browser, os, device } = parseUserAgent(session.userAgent);
     const DeviceIcon = device === "mobile" ? Smartphone : Laptop;
 
-    const locationLabel = session.location?.city && session.location?.country
-        ? `${session.location.city}, ${session.location.country}`
-        : "Unknown location";
+    const location = session.location ?? "Unknown location";
     const lastUsed = formatDistanceToNow(new Date(session.lastUsedAt), { addSuffix: true });
 
     return (
@@ -41,7 +36,7 @@ const SessionCard = ({ session, isCurrent }: SessionCardProps) => {
                 )}
                 <p className="flex items-center gap-1">
                     <MapPin className="size-4" />
-                    {locationLabel}
+                    {location}
                 </p>
                 <p className="flex items-center gap-1">
                     <Clock className="size-4" />
