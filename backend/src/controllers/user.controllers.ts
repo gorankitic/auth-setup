@@ -9,7 +9,7 @@ import { updateUserAvatar, updateUserData } from "src/services/user.services";
 // config
 import { UPLOADCARE_SIGNATURE_LIFETIME } from "src/config/uploadcare";
 // constants
-import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "src/constants/env";
+import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "src/config/env";
 
 // Get signed in user
 // GET method
@@ -71,6 +71,7 @@ export const getUploadcareSignature = catchAsync((req, res) => {
     const { secureSignature, secureExpire } = generateSecureSignature(secretKey, { lifetime: UPLOADCARE_SIGNATURE_LIFETIME });
 
     res.status(200).json({
+        status: "success",
         secureSignature,
         secureExpire,
         publicKey,

@@ -9,7 +9,7 @@ import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates";
 // models
 import User from "src/models/user.model";
 // constants
-import { CLIENT_ORIGIN } from "src/constants/env";
+import { CLIENT_ORIGIN } from "src/config/env";
 // services
 import { revokeAllUserSesions } from "./session.services";
 

@@ -10,11 +10,10 @@ import hpp from "hpp";
 // config
 import { connectDatabase } from "./config/database";
 // constants
-import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./constants/env";
+import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./config/env";
 // middlewares
 import { protect } from "./middleware/authMiddleware";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
-import { requestLogger } from "./middleware/requestLogger";
 import { globalRateLimiter } from "./middleware/rateLimiters";
 import { sanitizeMongo } from "./middleware/sanitizeMongo";
 // (routers)
@@ -38,13 +37,11 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "10kb" }));
 // 5) Cookie parser
 app.use(cookieParser());
-// 6) Logging
-app.use(requestLogger);
-// 7) Global rate limiter
+// 6) Global rate limiter
 app.use("/api", globalRateLimiter);
-// 8) Sanitize request against NoSQL injection
+// 7) Sanitize request against NoSQL injection
 app.use(sanitizeMongo);
-// 9). Prevent HTTP parameter pollution
+// 8). Prevent HTTP parameter pollution
 app.use(hpp());
 
 // (Routers)

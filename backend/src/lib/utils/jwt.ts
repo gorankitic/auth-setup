@@ -1,7 +1,7 @@
 // modules
 import jwt from "jsonwebtoken";
 // constants
-import { JWT_ACCESS_TOKEN_TTL_MS, JWT_ACCESS_SECRET } from "src/constants/env";
+import { JWT_ACCESS_TOKEN_TTL_MS, JWT_ACCESS_SECRET } from "src/config/env";
 
 type JWTPayload = {
     sub: string,

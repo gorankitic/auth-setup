@@ -9,7 +9,7 @@ import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates";
 import { createSession, revokeAllUserSesions, revokeSession, rotateSession } from "src/services/session.services";
 import { deleteUser, requestResetPassword, resetUserPassword, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services";
 // constants
-import { CLIENT_ORIGIN, SERVER_ORIGIN } from "src/constants/env";
+import { CLIENT_ORIGIN, SERVER_ORIGIN } from "src/config/env";
 
 // Sign up user
 // POST method

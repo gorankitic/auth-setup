@@ -2,34 +2,40 @@
 import { Request, Response, NextFunction } from "express";
 import { RateLimiterMemory } from "rate-limiter-flexible";
 
-// Global: 200 requests per 15 minutes per IP
+// GLOBAL RATE LIMITER
+// Protects entire API from abuse
+// 200 requests per 1 minute per IP
 const globalLimiter = new RateLimiterMemory({
-    points: 200,   // Maximum number of requests
-    duration: 15 * 60, // Per 15 minutes
+    points: 100,
+    duration: 60,
 });
-
 export const globalRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await globalLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
         res.set("Retry-After", String(Math.ceil(err.msBeforeNext / 1000)));
-
         return res.status(429).json({
             status: "error",
-            message: "Too many requests. Slow down.",
+            message: "Too many requests. Please slow down."
         });
     }
-};
+}
 
-// Auth: 5 requests every 15 minutes per IP
+// AUTH ROUTES LIMITER
+// Strict protection for sensitive endpoints
+// Refresh is EXCLUDED
 const authLimiter = new RateLimiterMemory({
-    points: 5,
-    duration: 15 * 60,
+    points: 5,                 // 5 attempts
+    duration: 15 * 60,         // every 15 minutes
 });
-
 export const authRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        // skip /api/v1/auth/refresh
+        if (req.path.includes("/api/v1/auth/refresh")) {
+            return next();
+        }
+
         await authLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
@@ -37,34 +43,35 @@ export const authRateLimiter = async (req: Request, res: Response, next: NextFun
 
         return res.status(429).json({
             status: "error",
-            message: "Too many attempts. Try again later.",
+            message: "Too many attempts. Try again later."
         });
     }
-};
+}
 
-// Refresh token: 20 requests every 15 minutes per IP
-const refreshLimiter = new RateLimiterMemory({
-    points: 20,
-    duration: 15 * 60,
+
+// PASSWORD LIMITER
+// Forgot password, reset password
+const sensitiveActionLimiter = new RateLimiterMemory({
+    points: 5,          // 5 attempts
+    duration: 60 * 60,  // per hour
 });
-
-export const refreshRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
+export const sensitiveRateLimiter = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await refreshLimiter.consume(req.ip!);
+        await sensitiveActionLimiter.consume(req.ip!);
         next();
     } catch (err: any) {
         res.set("Retry-After", String(Math.ceil(err.msBeforeNext / 1000)));
-
         return res.status(429).json({
             status: "error",
-            message: "Too many refresh attempts. Please sign in again.",
+            message: "Too many attempts. Please slow down."
         });
     }
-};
+}
 
+// UPLOAD RATE LIMITER
 const uploadLimiter = new RateLimiterMemory({
-    points: 10,            // 10 uploads
-    duration: 10 * 60,     // per 10 minutes
+    points: 5,           // 5 uploads
+    duration: 10 * 60,   // per 10 minutes
 });
 
 export const uploadRateLimiter = async (req: Request, res: Response, next: NextFunction) => {

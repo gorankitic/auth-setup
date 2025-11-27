@@ -1,3 +1,4 @@
+// modules
 import { Request } from "express";
 
 export const getLocation = async (req: Request) => {
@@ -10,11 +11,8 @@ export const getLocation = async (req: Request) => {
 
         if (ip === "::1") ip = "127.0.0.1";
 
-        console.log("IP:", ip);
-
         // Skip private IPs
         if (ip.startsWith("127.") || ip.startsWith("10.") || ip.startsWith("192.168.")) {
-            console.log("Local IP — skip location lookup");
             return null;
         }
 

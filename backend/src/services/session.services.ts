@@ -9,7 +9,7 @@ import { generateToken, hash } from "src/lib/utils/crypto";
 // models
 import Session from "src/models/session.model";
 // constants
-import { REFRESH_TOKEN_TTL_MS } from "src/constants/env";
+import { REFRESH_TOKEN_TTL_MS } from "src/config/env";
 // services
 import { getLocation } from "./location.services";
 
