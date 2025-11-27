@@ -7,7 +7,7 @@ import router from './router/index.tsx';
 // lib
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { queryClient } from '@/lib/config/queryClient.ts';
+import { queryClient } from '@/config/queryClient.ts';
 import { Toaster } from 'sonner';
 // styles
 import './index.css'

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // services
 import { resetPasswordApi } from "@/services/auth.services";
+// types
+import type { NormalizedError } from "@/lib/api/apiTypes";
 
 export const useResetPassword = () => {
     const navigate = useNavigate();
@@ -13,7 +15,7 @@ export const useResetPassword = () => {
             toast(data.message);
             navigate("/signin");
         },
-        onError: (error) => {
+        onError: (error: NormalizedError) => {
             toast.error(error.message);
         }
     });

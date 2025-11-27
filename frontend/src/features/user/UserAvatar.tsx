@@ -15,6 +15,8 @@ const UserAvatar = () => {
     const { updateAvatar } = useUpdateAvatar();
     const [isUploading, setIsUploading] = useState(false);
 
+    if (!user) return null;
+
     const handleFileSelect = async (file: File) => {
         setIsUploading(true);
 

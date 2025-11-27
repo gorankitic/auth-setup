@@ -2,8 +2,9 @@
 import { toast } from "sonner";
 import imageCompression from "browser-image-compression";
 // config
-import { uploadToUploadcare } from "@/lib/config/uploadcareClient";
-import { normalizeApiError } from "@/lib/config/apiClient";
+import { uploadToUploadcare } from "@/config/uploadcareClient";
+// utils
+import { normalizeApiError } from "@/lib/api/normalizeError";
 
 const MAX_MB = 2;
 const MAX_WIDTH_OR_HEIGHT = 512;

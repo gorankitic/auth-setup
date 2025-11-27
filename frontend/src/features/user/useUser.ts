@@ -11,5 +11,5 @@ export const useUser = () => {
         retry: false,
     });
 
-    return { isPending, user: data };
+    return { isPending, user: data?.user ?? null };
 }

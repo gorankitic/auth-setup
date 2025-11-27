@@ -1,9 +1,9 @@
 // lib
 import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
 // contants
-import { baseApiUrl } from "@/lib/constants/env";
-// types
-import type { BackendErrorResponse, NormalizedError } from "@/lib/types/api";
+import { baseApiUrl } from "@/config/env";
+// utils
+import { normalizeApiError } from "@/lib/api/normalizeError";
 
 // Custom type to add our own flat _retry to the request config
 interface AxiosRequestConfigWithRetry extends InternalAxiosRequestConfig {
@@ -76,35 +76,9 @@ api.interceptors.response.use(
         }
 
         // If it's not a 401 error, or if the retry already happened and failed,
-        // just pass the error down to the caller (React Query custom hook)
+        // just throw the error (Promise rejected) down to the caller (React Query custom hook, onError will catch it)
         throw normalizeApiError(error);
     }
 );
-
-
-export function normalizeApiError(error: unknown): NormalizedError {
-    // Axios error
-    if (axios.isAxiosError(error)) {
-        const statusCode = error.response?.status ?? 500;
-        const data = error.response?.data as BackendErrorResponse | undefined;
-
-        return {
-            status: data?.status || "error",
-            message:
-                data?.message ||
-                error.message ||
-                "Unexpected error occurred",
-            errors: data?.errors,
-            statusCode,
-        };
-    }
-
-    // Non-Axios error
-    return {
-        status: "error",
-        message: error instanceof Error ? error.message : "Unknown error",
-        statusCode: 500,
-    };
-}
 
 export default api;

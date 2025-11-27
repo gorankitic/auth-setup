@@ -3,6 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 // services
 import { updateDataApi } from "@/services/user.services";
+// types
+import type { NormalizedError } from "@/lib/api/apiTypes";
 
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
@@ -13,7 +15,7 @@ export const useUpdateUser = () => {
             toast.success(data.message);
             queryClient.invalidateQueries({ queryKey: ["user"] });
         },
-        onError: (error) => {
+        onError: (error: NormalizedError) => {
             toast.error(error.message);
         }
     });
