@@ -1,6 +1,7 @@
 # MERN Authentication & Security Kit
 
-A structured authentication system built while learning **React, Node.js, Express, MongoDB, Mongoose, Tailwind**, and applying modern security best practices.
+A structured authentication system built while learning **React, Node.js, Express, MongoDB, Mongoose, Tailwind, Typescript**,
+exploring libraries Tanstack Query, React Hook Form, Zod, Framer motion, and applying modern security best practices.
 
 This repository is a **personal starter kit** and serves as a reference for building authentication systems in my future MERN stack projects.
 
